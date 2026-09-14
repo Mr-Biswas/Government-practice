@@ -972,16 +972,16 @@ function renderQuestion() {
     // ----------------------------------------
 
     optionA.textContent =
-        question.optionA;
+        question.option.A;
 
     optionB.textContent =
-        question.optionB;
+        question.option.B;
 
     optionC.textContent =
-        question.optionC;
+        question.option.C;
 
     optionD.textContent =
-        question.optionD;
+        question.option.D;
 
 
     // ----------------------------------------
