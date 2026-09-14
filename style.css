@@ -1,75 +1,377 @@
+/* ============================================
+   Government Prep Practice
+   Phase 3 - Home Screen
+   ============================================ */
+
+
+/* ============================================
+   GLOBAL
+   ============================================ */
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+
 body {
     font-family: Arial, sans-serif;
+
     background: #f5f7fb;
+
     color: #222;
+
     min-height: 100vh;
 }
 
+
+button,
+input {
+    font-family: inherit;
+}
+
+
+/* ============================================
+   APP CONTAINER
+   ============================================ */
+
 #app {
     width: 100%;
-    max-width: 500px;
+
+    max-width: 520px;
+
     margin: 0 auto;
+
     padding: 20px;
 }
 
+
+/* ============================================
+   LOGIN
+   ============================================ */
+
 #login-screen {
     background: #ffffff;
+
     padding: 30px 20px;
+
     border-radius: 16px;
-    margin-top: 60px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+    margin-top: 50px;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.08);
 }
+
 
 h1 {
     font-size: 26px;
+
+    line-height: 1.3;
+
     margin-bottom: 8px;
 }
 
-#login-screen > p {
-    margin-bottom: 25px;
+
+.subtitle {
     color: #666;
+
+    margin-bottom: 25px;
 }
 
-#login-screen div {
+
+.form-group {
     margin-bottom: 18px;
 }
 
+
 label {
     display: block;
+
     margin-bottom: 7px;
+
     font-weight: 600;
 }
+
 
 input {
     width: 100%;
+
     padding: 13px;
+
     border: 1px solid #ccc;
+
     border-radius: 8px;
+
     font-size: 16px;
+
+    outline: none;
 }
+
+
+input:focus {
+    border-color: #555;
+}
+
+
+/* ============================================
+   BUTTONS
+   ============================================ */
 
 button {
-    width: 100%;
-    padding: 14px;
     border: none;
-    border-radius: 8px;
+
     cursor: pointer;
-    font-size: 16px;
+
+    font-size: 15px;
+
     font-weight: 600;
+
+    transition: opacity 0.2s ease;
 }
 
-#login-btn {
+
+button:hover {
+    opacity: 0.9;
+}
+
+
+button:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+.primary-btn {
+    width: 100%;
+
+    padding: 14px;
+
+    border-radius: 8px;
+
     background: #222;
-    color: white;
+
+    color: #ffffff;
 }
 
-#login-message {
+
+/* ============================================
+   MESSAGES
+   ============================================ */
+
+.message {
     margin-top: 15px;
+
     font-size: 14px;
+
+    min-height: 18px;
+}
+
+
+/* ============================================
+   HOME
+   ============================================ */
+
+#home-screen {
+    padding-bottom: 30px;
+}
+
+
+.home-header {
+    background: #ffffff;
+
+    padding: 22px 20px;
+
+    border-radius: 16px;
+
+    margin-bottom: 18px;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+
+.home-header h1 {
+    font-size: 23px;
+
+    margin-bottom: 5px;
+}
+
+
+.home-header .subtitle {
+    margin-bottom: 0;
+}
+
+
+/* ============================================
+   SECTION CARDS
+   ============================================ */
+
+#section-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+.section-card {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    background: #ffffff;
+
+    padding: 16px;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+
+.section-icon {
+    width: 48px;
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 25px;
+
+    background: #f1f3f6;
+
+    border-radius: 12px;
+
+    flex-shrink: 0;
+}
+
+
+.section-info {
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.section-info h2 {
+    font-size: 17px;
+
+    margin-bottom: 4px;
+}
+
+
+.section-info p {
+    font-size: 13px;
+
+    color: #777;
+}
+
+
+/* ============================================
+   START BUTTON
+   ============================================ */
+
+.start-btn {
+    width: auto;
+
+    min-width: 72px;
+
+    padding: 10px 14px;
+
+    border-radius: 8px;
+
+    background: #222;
+
+    color: #ffffff;
+}
+
+
+/* ============================================
+   LOGOUT
+   ============================================ */
+
+.logout-btn {
+    width: 100%;
+
+    padding: 13px;
+
+    margin-top: 20px;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    border: 1px solid #ccc;
+
+    color: #333;
+}
+
+
+/* ============================================
+   HIDDEN STATE
+   ============================================ */
+
+.hidden {
+    display: none !important;
+}
+
+
+/* ============================================
+   MOBILE
+   ============================================ */
+
+@media (max-width: 380px) {
+
+    #app {
+        padding: 14px;
+    }
+
+
+    #login-screen {
+        padding: 24px 16px;
+
+        margin-top: 30px;
+    }
+
+
+    .section-card {
+        padding: 13px;
+
+        gap: 10px;
+    }
+
+
+    .section-icon {
+        width: 42px;
+
+        height: 42px;
+
+        font-size: 22px;
+    }
+
+
+    .section-info h2 {
+        font-size: 15px;
+    }
+
+
+    .start-btn {
+        min-width: 64px;
+
+        padding: 9px 10px;
+
+        font-size: 13px;
+    }
+
 }
