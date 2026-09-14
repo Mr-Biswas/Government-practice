@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -11,7 +12,11 @@
 
     <title>Government Prep Practice</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
 
 
@@ -19,13 +24,16 @@
 
     <main id="app">
 
+
         <!-- ================================= -->
         <!-- LOGIN SCREEN -->
         <!-- ================================= -->
 
         <section id="login-screen">
 
-            <h1>Government Prep Practice</h1>
+            <h1>
+                Government Prep Practice
+            </h1>
 
             <p class="subtitle">
                 Practice. Improve. Repeat.
@@ -95,7 +103,9 @@
                 <div>
 
                     <h1>
-                        Welcome, <span id="user-name"></span> 👋
+                        Welcome,
+                        <span id="user-name"></span>
+                        👋
                     </h1>
 
                     <p class="subtitle">
@@ -140,55 +150,6 @@
                     </button>
 
                 </div>
-                <!-- Quiz Screen -->
-
-<div id="quiz-screen" class="screen hidden">
-
-    <div class="quiz-header">
-        <div>
-            <h2 id="quiz-section-name">Practice</h2>
-            <p id="question-counter">Question 1 of 10</p>
-        </div>
-    </div>
-
-    <div class="quiz-card">
-
-        <div class="question-text" id="question-text">
-            Question will appear here.
-        </div>
-
-        <div class="options-container">
-
-            <button class="option-btn" data-option="A">
-                <span class="option-label">A</span>
-                <span class="option-text" id="option-a">Option A</span>
-            </button>
-
-            <button class="option-btn" data-option="B">
-                <span class="option-label">B</span>
-                <span class="option-text" id="option-b">Option B</span>
-            </button>
-
-            <button class="option-btn" data-option="C">
-                <span class="option-label">C</span>
-                <span class="option-text" id="option-c">Option C</span>
-            </button>
-
-            <button class="option-btn" data-option="D">
-                <span class="option-label">D</span>
-                <span class="option-text" id="option-d">Option D</span>
-            </button>
-
-        </div>
-
-        <button id="next-question-btn" class="primary-btn" disabled>
-            Next →
-        </button>
-
-    </div>
-
-</div>
-
 
 
 
@@ -322,6 +283,7 @@
 
                 </div>
 
+
             </div>
 
 
@@ -344,10 +306,148 @@
 
         </section>
 
+
+
+        <!-- ================================= -->
+        <!-- QUIZ SCREEN -->
+        <!-- ================================= -->
+
+        <section
+            id="quiz-screen"
+            class="hidden"
+        >
+
+            <div class="quiz-header">
+
+                <div>
+
+                    <h2 id="quiz-section-name">
+                        Practice
+                    </h2>
+
+                    <p id="question-counter">
+                        Question 1 of 10
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="quiz-card">
+
+                <div
+                    class="question-text"
+                    id="question-text"
+                >
+                    Question will appear here.
+                </div>
+
+
+                <div class="options-container">
+
+
+                    <button
+                        class="option-btn"
+                        data-option="A"
+                    >
+
+                        <span class="option-label">
+                            A
+                        </span>
+
+                        <span
+                            class="option-text"
+                            id="option-a"
+                        >
+                            Option A
+                        </span>
+
+                    </button>
+
+
+
+                    <button
+                        class="option-btn"
+                        data-option="B"
+                    >
+
+                        <span class="option-label">
+                            B
+                        </span>
+
+                        <span
+                            class="option-text"
+                            id="option-b"
+                        >
+                            Option B
+                        </span>
+
+                    </button>
+
+
+
+                    <button
+                        class="option-btn"
+                        data-option="C"
+                    >
+
+                        <span class="option-label">
+                            C
+                        </span>
+
+                        <span
+                            class="option-text"
+                            id="option-c"
+                        >
+                            Option C
+                        </span>
+
+                    </button>
+
+
+
+                    <button
+                        class="option-btn"
+                        data-option="D"
+                    >
+
+                        <span class="option-label">
+                            D
+                        </span>
+
+                        <span
+                            class="option-text"
+                            id="option-d"
+                        >
+                            Option D
+                        </span>
+
+                    </button>
+
+
+                </div>
+
+
+                <button
+                    id="next-question-btn"
+                    class="primary-btn"
+                    disabled
+                >
+                    Next →
+                </button>
+
+            </div>
+
+        </section>
+
+
     </main>
 
 
-    <!-- JavaScript -->
+    <!-- ================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ================================= -->
 
     <script src="app.js?v=3"></script>
 
