@@ -1,11 +1,11 @@
 // ============================================
 // Government Prep Practice
-// Phase 3
-// Authentication + Home Screen
+// Phase 4B
+// Authentication + Home + Basic Quiz Flow
 // ============================================
 
 
-console.log("APP.JS VERSION 3 LOADED");
+console.log("APP.JS PHASE 4B LOADED");
 
 
 // ============================================
@@ -23,10 +23,17 @@ let sessionToken = null;
 
 let loggedInUser = null;
 
-// Quiz state
+
+// ============================================
+// QUIZ STATE
+// ============================================
+
 let quizSection = "";
+
 let quizQuestions = [];
+
 let currentQuestionIndex = 0;
+
 let selectedAnswer = null;
 
 
@@ -66,8 +73,35 @@ const logoutButton =
 const homeMessage =
     document.getElementById("home-message");
 
+
+// Quiz
+
 const quizScreen =
     document.getElementById("quiz-screen");
+
+const quizSectionName =
+    document.getElementById("quiz-section-name");
+
+const questionCounter =
+    document.getElementById("question-counter");
+
+const questionText =
+    document.getElementById("question-text");
+
+const optionA =
+    document.getElementById("option-a");
+
+const optionB =
+    document.getElementById("option-b");
+
+const optionC =
+    document.getElementById("option-c");
+
+const optionD =
+    document.getElementById("option-d");
+
+const nextQuestionButton =
+    document.getElementById("next-question-btn");
 
 
 // Section buttons
@@ -76,45 +110,97 @@ const startButtons =
     document.querySelectorAll(".start-btn");
 
 
+// Quiz option buttons
+
+const optionButtons =
+    document.querySelectorAll(".option-btn");
+
+
 // ============================================
 // LOGIN EVENT
 // ============================================
 
-loginButton.addEventListener(
-    "click",
-    login
-);
+if (loginButton) {
+
+    loginButton.addEventListener(
+        "click",
+        login
+    );
+
+}
 
 
 // ============================================
 // SECTION EVENTS
 // ============================================
 
-startButtons.forEach(function (button) {
+startButtons.forEach(
+    function (button) {
 
-    button.addEventListener(
-        "click",
-        function () {
+        button.addEventListener(
+            "click",
+            function () {
 
-            const section =
-                button.dataset.section;
+                const section =
+                    button.dataset.section;
 
-            startPractice(section);
+                startPractice(section);
 
-        }
-    );
+            }
+        );
 
-});
+    }
+);
 
 
 // ============================================
 // LOGOUT EVENT
 // ============================================
 
-logoutButton.addEventListener(
-    "click",
-    logout
+if (logoutButton) {
+
+    logoutButton.addEventListener(
+        "click",
+        logout
+    );
+
+}
+
+
+// ============================================
+// QUIZ OPTION EVENTS
+// ============================================
+
+optionButtons.forEach(
+    function (button) {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                selectAnswer(
+                    this.dataset.option
+                );
+
+            }
+        );
+
+    }
 );
+
+
+// ============================================
+// NEXT QUESTION EVENT
+// ============================================
+
+if (nextQuestionButton) {
+
+    nextQuestionButton.addEventListener(
+        "click",
+        nextQuestion
+    );
+
+}
 
 
 // ============================================
@@ -130,9 +216,9 @@ async function login() {
         passwordInput.value;
 
 
-    // -----------------------------
+    // ----------------------------------------
     // Validate fields
-    // -----------------------------
+    // ----------------------------------------
 
     if (!name || !password) {
 
@@ -144,9 +230,9 @@ async function login() {
     }
 
 
-    // -----------------------------
+    // ----------------------------------------
     // Validate API URL
-    // -----------------------------
+    // ----------------------------------------
 
     if (
         !API_URL ||
@@ -166,11 +252,12 @@ async function login() {
     }
 
 
-    // -----------------------------
+    // ----------------------------------------
     // Loading state
-    // -----------------------------
+    // ----------------------------------------
 
-    loginButton.disabled = true;
+    loginButton.disabled =
+        true;
 
     loginButton.textContent =
         "LOGGING IN...";
@@ -179,6 +266,10 @@ async function login() {
 
 
     try {
+
+        // ------------------------------------
+        // Send login request
+        // ------------------------------------
 
         const formData =
             new URLSearchParams();
@@ -209,6 +300,10 @@ async function login() {
             );
 
 
+        // ------------------------------------
+        // Check HTTP response
+        // ------------------------------------
+
         if (!response.ok) {
 
             throw new Error(
@@ -217,6 +312,10 @@ async function login() {
             );
         }
 
+
+        // ------------------------------------
+        // Read JSON response
+        // ------------------------------------
 
         const result =
             await response.json();
@@ -228,9 +327,9 @@ async function login() {
         );
 
 
-        // -----------------------------
+        // ------------------------------------
         // Login failed
-        // -----------------------------
+        // ------------------------------------
 
         if (!result.success) {
 
@@ -243,9 +342,9 @@ async function login() {
         }
 
 
-        // -----------------------------
+        // ------------------------------------
         // Login successful
-        // -----------------------------
+        // ------------------------------------
 
         sessionToken =
             result.token;
@@ -271,14 +370,24 @@ async function login() {
         );
 
 
-        // -----------------------------
+        // ------------------------------------
+        // Clear password field
+        // ------------------------------------
+
+        passwordInput.value =
+            "";
+
+
+        // ------------------------------------
         // Open Home
-        // -----------------------------
+        // ------------------------------------
 
         showHome();
 
+    }
 
-    } catch (error) {
+
+    catch (error) {
 
         console.error(
             "LOGIN ERROR:",
@@ -290,8 +399,10 @@ async function login() {
             "Unable to connect to the server. Please try again."
         );
 
+    }
 
-    } finally {
+
+    finally {
 
         loginButton.disabled =
             false;
@@ -300,6 +411,40 @@ async function login() {
             "LOGIN";
 
     }
+
+}
+
+
+// ============================================
+// SHOW LOGIN MESSAGE
+// ============================================
+
+function showLoginMessage(message) {
+
+    if (!loginMessage) {
+        return;
+    }
+
+
+    loginMessage.textContent =
+        message;
+
+}
+
+
+// ============================================
+// SHOW HOME MESSAGE
+// ============================================
+
+function showHomeMessage(message) {
+
+    if (!homeMessage) {
+        return;
+    }
+
+
+    homeMessage.textContent =
+        message;
 
 }
 
@@ -335,6 +480,148 @@ function showHome() {
     console.log(
         "HOME SCREEN DISPLAYED"
     );
+
+}
+
+
+// ============================================
+// SHOW LOGIN SCREEN
+// ============================================
+
+function showLogin() {
+
+    loginScreen.classList.remove(
+        "hidden"
+    );
+
+    homeScreen.classList.add(
+        "hidden"
+    );
+
+    quizScreen.classList.add(
+        "hidden"
+    );
+
+
+    console.log(
+        "LOGIN SCREEN DISPLAYED"
+    );
+
+}
+
+
+// ============================================
+// LOGOUT
+// ============================================
+
+async function logout() {
+
+    // ----------------------------------------
+    // If there is no session, simply return
+    // to login
+    // ----------------------------------------
+
+    if (!sessionToken) {
+
+        loggedInUser =
+            null;
+
+        showLogin();
+
+        return;
+    }
+
+
+    try {
+
+        // ------------------------------------
+        // Send logout request
+        // ------------------------------------
+
+        const formData =
+            new URLSearchParams();
+
+        formData.append(
+            "action",
+            "logout"
+        );
+
+        formData.append(
+            "token",
+            sessionToken
+        );
+
+
+        const response =
+            await fetch(
+                API_URL,
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        console.log(
+            "Logout response:",
+            result
+        );
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "LOGOUT ERROR:",
+            error
+        );
+
+    }
+
+
+    finally {
+
+        // ------------------------------------
+        // Clear session from browser memory
+        // ------------------------------------
+
+        sessionToken =
+            null;
+
+        loggedInUser =
+            null;
+
+
+        // ------------------------------------
+        // Clear quiz state
+        // ------------------------------------
+
+        quizSection =
+            "";
+
+        quizQuestions =
+            [];
+
+        currentQuestionIndex =
+            0;
+
+        selectedAnswer =
+            null;
+
+
+        // ------------------------------------
+        // Return to login
+        // ------------------------------------
+
+        showLogin();
+
+    }
+
 }
 
 
@@ -360,6 +647,7 @@ function showQuiz() {
     console.log(
         "QUIZ SCREEN DISPLAYED"
     );
+
 }
 
 
@@ -369,62 +657,141 @@ function showQuiz() {
 
 async function startPractice(section) {
 
-    // Check whether the user is logged in
+    // ----------------------------------------
+    // Check session
+    // ----------------------------------------
+
     if (!sessionToken) {
 
         alert(
             "Your session has expired. Please log in again."
         );
 
+        showLogin();
 
-        loginScreen.classList.remove(
-            "hidden"
+        return;
+    }
+
+
+    // ----------------------------------------
+    // Validate section
+    // ----------------------------------------
+
+    if (!section) {
+
+        console.error(
+            "No section was provided."
         );
 
-        homeScreen.classList.add(
-            "hidden"
-        );
-
-        quizScreen.classList.add(
-            "hidden"
+        alert(
+            "Unable to start practice. Section not found."
         );
 
         return;
     }
 
 
+    // ----------------------------------------
     // Store selected section
-    quizSection = section;
+    // ----------------------------------------
+
+    quizSection =
+        section;
+
+
+    // ----------------------------------------
+    // Disable clicked button temporarily
+    // ----------------------------------------
+
+    startButtons.forEach(
+        function (button) {
+
+            button.disabled =
+                true;
+
+        }
+    );
 
 
     try {
 
-        // Request questions from Google Apps Script
-        const response = await fetch(
-            API_URL,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type":
-                        "text/plain;charset=utf-8"
-                },
-
-                body: JSON.stringify({
-                    action: "getQuestions",
-                    token: sessionToken,
-                    section: section
-                })
-            }
+        console.log(
+            "Loading questions for section:",
+            section
         );
 
 
+        // ------------------------------------
+        // IMPORTANT:
+        // Use URLSearchParams because the
+        // Apps Script backend reads
+        // e.parameter.
+        // ------------------------------------
+
+        const formData =
+            new URLSearchParams();
+
+        formData.append(
+            "action",
+            "getQuestions"
+        );
+
+        formData.append(
+            "token",
+            sessionToken
+        );
+
+        formData.append(
+            "section",
+            section
+        );
+
+
+        // ------------------------------------
+        // Request questions
+        // ------------------------------------
+
+        const response =
+            await fetch(
+                API_URL,
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        // ------------------------------------
+        // Check HTTP response
+        // ------------------------------------
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Server returned HTTP " +
+                response.status
+            );
+        }
+
+
+        // ------------------------------------
         // Convert response to JSON
+        // ------------------------------------
+
         const data =
             await response.json();
 
 
-        // Handle backend error
+        console.log(
+            "Questions response:",
+            data
+        );
+
+
+        // ------------------------------------
+        // Backend rejected request
+        // ------------------------------------
+
         if (!data.success) {
 
             alert(
@@ -436,41 +803,75 @@ async function startPractice(section) {
         }
 
 
-        // Store questions in browser memory
+        // ------------------------------------
+        // Validate question array
+        // ------------------------------------
+
+        if (
+            !Array.isArray(data.questions) ||
+            data.questions.length === 0
+        ) {
+
+            alert(
+                "No questions were returned from the server."
+            );
+
+            return;
+        }
+
+
+        // ------------------------------------
+        // Store questions in memory
+        // ------------------------------------
+
         quizQuestions =
             data.questions;
 
 
-        // Start from first question
+        // ------------------------------------
+        // Start from question 1
+        // ------------------------------------
+
         currentQuestionIndex =
             0;
 
 
+        // ------------------------------------
         // Reset selected answer
+        // ------------------------------------
+
         selectedAnswer =
             null;
 
 
-        // Display selected section
-        document.getElementById(
-            "quiz-section-name"
-        ).textContent =
+        // ------------------------------------
+        // Display section name
+        // ------------------------------------
+
+        quizSectionName.textContent =
             section;
 
 
-        // Show quiz screen
+        // ------------------------------------
+        // Open quiz screen
+        // ------------------------------------
+
         showQuiz();
 
 
+        // ------------------------------------
         // Display first question
+        // ------------------------------------
+
         renderQuestion();
 
     }
 
+
     catch (error) {
 
         console.error(
-            "Error loading questions:",
+            "ERROR LOADING QUESTIONS:",
             error
         );
 
@@ -478,7 +879,27 @@ async function startPractice(section) {
         alert(
             "Unable to connect to the server. Please try again."
         );
+
     }
+
+
+    finally {
+
+        // ------------------------------------
+        // Re-enable section buttons
+        // ------------------------------------
+
+        startButtons.forEach(
+            function (button) {
+
+                button.disabled =
+                    false;
+
+            }
+        );
+
+    }
+
 }
 
 
@@ -488,14 +909,26 @@ async function startPractice(section) {
 
 function renderQuestion() {
 
-    // Make sure questions are available
+    // ----------------------------------------
+    // Validate question data
+    // ----------------------------------------
+
     if (
         !quizQuestions ||
         quizQuestions.length === 0
     ) {
+
+        console.error(
+            "No quiz questions available."
+        );
+
         return;
     }
 
+
+    // ----------------------------------------
+    // Get current question
+    // ----------------------------------------
 
     const question =
         quizQuestions[
@@ -503,10 +936,22 @@ function renderQuestion() {
         ];
 
 
+    if (!question) {
+
+        console.error(
+            "Question not found at index:",
+            currentQuestionIndex
+        );
+
+        return;
+    }
+
+
+    // ----------------------------------------
     // Update question counter
-    document.getElementById(
-        "question-counter"
-    ).textContent =
+    // ----------------------------------------
+
+    questionCounter.textContent =
         `Question ${
             currentQuestionIndex + 1
         } of ${
@@ -514,45 +959,45 @@ function renderQuestion() {
         }`;
 
 
+    // ----------------------------------------
     // Display question
-    document.getElementById(
-        "question-text"
-    ).textContent =
+    // ----------------------------------------
+
+    questionText.textContent =
         question.question;
 
 
+    // ----------------------------------------
     // Display options
-    document.getElementById(
-        "option-a"
-    ).textContent =
+    // ----------------------------------------
+
+    optionA.textContent =
         question.optionA;
 
-    document.getElementById(
-        "option-b"
-    ).textContent =
+    optionB.textContent =
         question.optionB;
 
-    document.getElementById(
-        "option-c"
-    ).textContent =
+    optionC.textContent =
         question.optionC;
 
-    document.getElementById(
-        "option-d"
-    ).textContent =
+    optionD.textContent =
         question.optionD;
 
 
-    // Reset selected answer
+    // ----------------------------------------
+    // Reset answer
+    // ----------------------------------------
+
     selectedAnswer =
         null;
 
 
+    // ----------------------------------------
     // Remove previous selection
-    document.querySelectorAll(
-        ".option-btn"
-    ).forEach(
-        function(button) {
+    // ----------------------------------------
+
+    optionButtons.forEach(
+        function (button) {
 
             button.classList.remove(
                 "selected"
@@ -562,105 +1007,134 @@ function renderQuestion() {
     );
 
 
+    // ----------------------------------------
     // Disable Next button
-    document.getElementById(
-        "next-question-btn"
-    ).disabled =
+    // ----------------------------------------
+
+    nextQuestionButton.disabled =
         true;
+
 }
 
 
 // ============================================
-// OPTION SELECTION
+// SELECT ANSWER
 // ============================================
 
-document.querySelectorAll(
-    ".option-btn"
-).forEach(
-    function(button) {
+function selectAnswer(option) {
 
-        button.addEventListener(
-            "click",
-            function() {
+    // ----------------------------------------
+    // Store selected answer
+    // ----------------------------------------
 
-                // Store selected answer
-                selectedAnswer =
-                    this.dataset.option;
+    selectedAnswer =
+        option;
 
 
-                // Remove previous selection
-                document.querySelectorAll(
-                    ".option-btn"
-                ).forEach(
-                    function(option) {
+    // ----------------------------------------
+    // Remove previous selection
+    // ----------------------------------------
 
-                        option.classList.remove(
-                            "selected"
-                        );
+    optionButtons.forEach(
+        function (button) {
 
-                    }
-                );
+            button.classList.remove(
+                "selected"
+            );
+
+        }
+    );
 
 
-                // Highlight selected option
-                this.classList.add(
+    // ----------------------------------------
+    // Highlight selected option
+    // ----------------------------------------
+
+    optionButtons.forEach(
+        function (button) {
+
+            if (
+                button.dataset.option ===
+                option
+            ) {
+
+                button.classList.add(
                     "selected"
                 );
 
-
-                // Enable Next button
-                document.getElementById(
-                    "next-question-btn"
-                ).disabled =
-                    false;
-
             }
-        );
 
-    }
-);
+        }
+    );
+
+
+    // ----------------------------------------
+    // Enable Next button
+    // ----------------------------------------
+
+    nextQuestionButton.disabled =
+        false;
+
+
+    console.log(
+        "Selected answer:",
+        selectedAnswer
+    );
+
+}
 
 
 // ============================================
 // NEXT QUESTION
 // ============================================
 
-document.getElementById(
-    "next-question-btn"
-).addEventListener(
-    "click",
-    function() {
+function nextQuestion() {
 
-        // Make sure an answer is selected
-        if (!selectedAnswer) {
-            return;
-        }
+    // ----------------------------------------
+    // Make sure an answer is selected
+    // ----------------------------------------
 
+    if (!selectedAnswer) {
 
-        // Move to next question
-        currentQuestionIndex++;
-
-
-        // Check whether all questions are completed
-        if (
-            currentQuestionIndex >=
-            quizQuestions.length
-        ) {
-
-            alert(
-                "Basic quiz flow completed successfully."
-            );
-
-
-            // Return to Home
-            showHome();
-
-            return;
-        }
-
-
-        // Display next question
-        renderQuestion();
-
+        return;
     }
-);
+
+
+    // ----------------------------------------
+    // Move to next question
+    // ----------------------------------------
+
+    currentQuestionIndex++;
+
+
+    // ----------------------------------------
+    // Check if quiz is complete
+    // ----------------------------------------
+
+    if (
+        currentQuestionIndex >=
+        quizQuestions.length
+    ) {
+
+        alert(
+            "Basic quiz flow completed successfully."
+        );
+
+
+        // ------------------------------------
+        // Return to Home
+        // ------------------------------------
+
+        showHome();
+
+        return;
+    }
+
+
+    // ----------------------------------------
+    // Display next question
+    // ----------------------------------------
+
+    renderQuestion();
+
+}
