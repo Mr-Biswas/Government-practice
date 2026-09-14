@@ -1,10 +1,11 @@
 // ============================================
 // Government Prep Practice
 // V1.0
-// Authentication + Quiz + Timer + Scoring
+// Phase 5
+// Authentication + Quiz + Timer + Scoring + Result Storage
 // ============================================
 
-console.log("APP.JS V1.0 FINAL LOADED");
+console.log("APP.JS V1.0 PHASE 5 LOADED");
 
 
 // ============================================
@@ -35,10 +36,8 @@ let currentQuestionIndex = 0;
 
 let selectedAnswer = null;
 
-
-// One answer per question
-
 let userAnswers = [];
+
 let quizStartTime = null;
 
 
@@ -265,10 +264,12 @@ async function login() {
             "login"
         );
 
+
         formData.append(
             "name",
             name
         );
+
 
         formData.append(
             "password",
@@ -319,6 +320,7 @@ async function login() {
         sessionToken =
             result.token;
 
+
         loggedInUser =
             result.name;
 
@@ -367,6 +369,7 @@ async function login() {
 function showLoginMessage(message) {
 
     if (!loginMessage) {
+
         return;
     }
 
@@ -384,6 +387,7 @@ function showLoginMessage(message) {
 function showHomeMessage(message) {
 
     if (!homeMessage) {
+
         return;
     }
 
@@ -401,33 +405,36 @@ function showHomeMessage(message) {
 function showHome() {
 
     stopQuestionTimer();
-    quizStartTime = null;
+
+    quizStartTime =
+        null;
 
 
     loginScreen.classList.add(
         "hidden"
     );
 
+
     homeScreen.classList.remove(
         "hidden"
     );
 
+
     quizScreen.classList.add(
         "hidden"
     );
+
 
     resultScreen.classList.add(
         "hidden"
     );
 
 
-    // Restore quiz card/header
-    // for the next practice session
-
     const quizCard =
         document.querySelector(
             ".quiz-card"
         );
+
 
     const quizHeader =
         document.querySelector(
@@ -472,18 +479,24 @@ function showLogin() {
 
     stopQuestionTimer();
 
+    quizStartTime =
+        null;
+
 
     loginScreen.classList.remove(
         "hidden"
     );
 
+
     homeScreen.classList.add(
         "hidden"
     );
 
+
     quizScreen.classList.add(
         "hidden"
     );
+
 
     resultScreen.classList.add(
         "hidden"
@@ -499,7 +512,9 @@ function showLogin() {
 async function logout() {
 
     stopQuestionTimer();
-    quizStartTime = null;
+
+    quizStartTime =
+        null;
 
 
     if (sessionToken) {
@@ -514,6 +529,7 @@ async function logout() {
                 "action",
                 "logout"
             );
+
 
             formData.append(
                 "token",
@@ -547,20 +563,26 @@ async function logout() {
     sessionToken =
         null;
 
+
     loggedInUser =
         null;
+
 
     quizSection =
         "";
 
+
     quizQuestions =
         [];
+
 
     userAnswers =
         [];
 
+
     currentQuestionIndex =
         0;
+
 
     selectedAnswer =
         null;
@@ -583,7 +605,9 @@ async function startPractice(section) {
             "Your session has expired. Please log in again."
         );
 
+
         showLogin();
+
 
         return;
     }
@@ -594,6 +618,7 @@ async function startPractice(section) {
         alert(
             "Practice section not found."
         );
+
 
         return;
     }
@@ -624,10 +649,12 @@ async function startPractice(section) {
             "getQuestions"
         );
 
+
         formData.append(
             "token",
             sessionToken
         );
+
 
         formData.append(
             "section",
@@ -671,18 +698,22 @@ async function startPractice(section) {
                 "Unable to load questions."
             );
 
+
             return;
         }
 
 
         if (
-            !Array.isArray(data.questions) ||
+            !Array.isArray(
+                data.questions
+            ) ||
             data.questions.length !== 10
         ) {
 
             alert(
                 "The practice session did not return exactly 10 questions."
             );
+
 
             return;
         }
@@ -695,7 +726,11 @@ async function startPractice(section) {
         userAnswers =
             [];
 
-        quizStartTime = Date.now();
+
+        quizStartTime =
+            Date.now();
+
+
         currentQuestionIndex =
             0;
 
@@ -718,19 +753,29 @@ async function startPractice(section) {
                 ".quiz-card"
             );
 
+
         const quizHeader =
             document.querySelector(
                 ".quiz-header"
             );
 
 
-        quizCard.classList.remove(
-            "hidden"
-        );
+        if (quizCard) {
 
-        quizHeader.classList.remove(
-            "hidden"
-        );
+            quizCard.classList.remove(
+                "hidden"
+            );
+
+        }
+
+
+        if (quizHeader) {
+
+            quizHeader.classList.remove(
+                "hidden"
+            );
+
+        }
 
 
         showQuiz();
@@ -782,9 +827,11 @@ function showQuiz() {
         "hidden"
     );
 
+
     homeScreen.classList.add(
         "hidden"
     );
+
 
     quizScreen.classList.remove(
         "hidden"
@@ -828,11 +875,14 @@ function renderQuestion() {
     optionA.textContent =
         question.options.A || "";
 
+
     optionB.textContent =
         question.options.B || "";
 
+
     optionC.textContent =
         question.options.C || "";
+
 
     optionD.textContent =
         question.options.D || "";
@@ -1016,8 +1066,12 @@ function handleTimeout() {
     );
 
 
-    // No selected answer means
+    // Timeout always means
     // unanswered / wrong.
+
+    selectedAnswer =
+        null;
+
 
     recordCurrentAnswer();
 
@@ -1137,7 +1191,9 @@ async function submitQuiz() {
     );
 
 
+    // ----------------------------------------
     // Safety check
+    // ----------------------------------------
 
     if (
         userAnswers.length !==
@@ -1163,6 +1219,7 @@ async function submitQuiz() {
 
         showHome();
 
+
         return;
     }
 
@@ -1178,23 +1235,32 @@ async function submitQuiz() {
             "submitQuiz"
         );
 
+
         formData.append(
             "token",
             sessionToken
         );
+
 
         formData.append(
             "section",
             quizSection
         );
 
+
         formData.append(
             "answers",
             JSON.stringify(
                 userAnswers
             )
+        );
 
-        formData.append("quizStartTime", String(quizStartTime || "")
+
+        formData.append(
+            "quizStartTime",
+            String(
+                quizStartTime || ""
+            )
         );
 
 
@@ -1236,6 +1302,7 @@ async function submitQuiz() {
 
 
             showHome();
+
 
             return;
         }
@@ -1284,6 +1351,7 @@ function showResult(result) {
         document.querySelector(
             ".quiz-card"
         );
+
 
     const quizHeader =
         document.querySelector(
