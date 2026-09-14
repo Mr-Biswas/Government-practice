@@ -347,21 +347,20 @@ async function startPractice(section) {
     quizSection = section;
 
     try {
-        // Prepare form data for Google Apps Script
+        // Prepare request parameters
         const requestData = new URLSearchParams();
 
         requestData.append("action", "getQuestions");
         requestData.append("token", sessionToken);
         requestData.append("section", section);
 
-        // Request questions from Google Apps Script
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: requestData.toString()
-        });
+        // Send request to Google Apps Script
+        const response = await fetch(
+            API_URL + "?" + requestData.toString(),
+            {
+                method: "POST"
+            }
+        );
 
         const data = await response.json();
 
