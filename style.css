@@ -1,1 +1,75 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #222;
+    min-height: 100vh;
+}
+
+#app {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#login-screen {
+    background: #ffffff;
+    padding: 30px 20px;
+    border-radius: 16px;
+    margin-top: 60px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+    font-size: 26px;
+    margin-bottom: 8px;
+}
+
+#login-screen > p {
+    margin-bottom: 25px;
+    color: #666;
+}
+
+#login-screen div {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 600;
+}
+
+input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+#login-btn {
+    background: #222;
+    color: white;
+}
+
+#login-message {
+    margin-top: 15px;
+    font-size: 14px;
+}
