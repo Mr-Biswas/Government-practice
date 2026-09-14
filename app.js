@@ -1,13 +1,15 @@
 // ============================================
 // Government Prep Practice
-// Phase 2 - Authentication
+// Phase 3
+// Authentication + Home Screen
 // ============================================
 
-console.log("APP.JS VERSION 2 LOADED");
+
+console.log("APP.JS VERSION 3 LOADED");
 
 
 // ============================================
-// APPS SCRIPT URL
+// APPS SCRIPT WEB APP URL
 // ============================================
 
 const API_URL = "https://script.google.com/macros/s/AKfycbyFwimtTepiYgi29nNxBi6CpDj-TjbcwzpmOw0gtn86st_JT1cDP0AhZl5rvV_WdgAqYA/exec";
@@ -18,6 +20,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyFwimtTepiYgi29nNxBi6C
 // ============================================
 
 let sessionToken = null;
+
 let loggedInUser = null;
 
 
@@ -25,41 +28,84 @@ let loggedInUser = null;
 // DOM ELEMENTS
 // ============================================
 
-const loginButton = document.getElementById("login-btn");
-const nameInput = document.getElementById("name");
-const passwordInput = document.getElementById("password");
-const loginMessage = document.getElementById("login-message");
+// Login
+
+const loginScreen =
+    document.getElementById("login-screen");
+
+const loginButton =
+    document.getElementById("login-btn");
+
+const nameInput =
+    document.getElementById("name");
+
+const passwordInput =
+    document.getElementById("password");
+
+const loginMessage =
+    document.getElementById("login-message");
 
 
-// ============================================
-// CHECK FRONTEND CONNECTION
-// ============================================
+// Home
 
-console.log("Login button:", loginButton);
-console.log("Name input:", nameInput);
-console.log("Password input:", passwordInput);
-console.log("Login message:", loginMessage);
+const homeScreen =
+    document.getElementById("home-screen");
+
+const userName =
+    document.getElementById("user-name");
+
+const logoutButton =
+    document.getElementById("logout-btn");
+
+const homeMessage =
+    document.getElementById("home-message");
+
+
+// Section buttons
+
+const startButtons =
+    document.querySelectorAll(".start-btn");
 
 
 // ============================================
 // LOGIN EVENT
 // ============================================
 
-if (loginButton) {
+loginButton.addEventListener(
+    "click",
+    login
+);
 
-    loginButton.addEventListener("click", function () {
 
-        console.log("LOGIN BUTTON CLICKED");
+// ============================================
+// SECTION EVENTS
+// ============================================
 
-        login();
+startButtons.forEach(function (button) {
 
-    });
+    button.addEventListener(
+        "click",
+        function () {
 
-} else {
+            const section =
+                button.dataset.section;
 
-    console.error("LOGIN BUTTON NOT FOUND");
+            startPractice(section);
 
-}
+        }
+    );
+
+});
+
+
+// ============================================
+// LOGOUT EVENT
+// ============================================
+
+logoutButton.addEventListener(
+    "click",
+    logout
+);
 
 
 // ============================================
@@ -68,24 +114,20 @@ if (loginButton) {
 
 async function login() {
 
-    console.log("LOGIN FUNCTION STARTED");
+    const name =
+        nameInput.value.trim();
 
-
-    const name = nameInput.value.trim();
-    const password = passwordInput.value;
-
-
-    console.log("Name entered:", name);
-    console.log("Password entered:", password ? "YES" : "NO");
+    const password =
+        passwordInput.value;
 
 
     // -----------------------------
-    // Basic validation
+    // Validate fields
     // -----------------------------
 
     if (!name || !password) {
 
-        showMessage(
+        showLoginMessage(
             "Please enter your name and password."
         );
 
@@ -94,20 +136,21 @@ async function login() {
 
 
     // -----------------------------
-    // Check API URL
+    // Validate API URL
     // -----------------------------
 
     if (
         !API_URL ||
-        API_URL === "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE"
+        API_URL ===
+        "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE"
     ) {
 
-        showMessage(
+        showLoginMessage(
             "Apps Script API URL is not configured."
         );
 
         console.error(
-            "API_URL has not been configured."
+            "API_URL is not configured."
         );
 
         return;
@@ -115,64 +158,76 @@ async function login() {
 
 
     // -----------------------------
-    // Disable button
+    // Loading state
     // -----------------------------
 
     loginButton.disabled = true;
 
-    loginButton.textContent = "LOGGING IN...";
+    loginButton.textContent =
+        "LOGGING IN...";
 
-    showMessage("");
+    showLoginMessage("");
 
 
     try {
 
-        console.log("Sending login request...");
+        const formData =
+            new URLSearchParams();
 
-
-        const formData = new URLSearchParams();
-
-        formData.append("action", "login");
-        formData.append("name", name);
-        formData.append("password", password);
-
-
-        const response = await fetch(API_URL, {
-
-            method: "POST",
-
-            body: formData
-
-        });
-
-
-        console.log(
-            "Server response status:",
-            response.status
+        formData.append(
+            "action",
+            "login"
         );
+
+        formData.append(
+            "name",
+            name
+        );
+
+        formData.append(
+            "password",
+            password
+        );
+
+
+        const response =
+            await fetch(
+                API_URL,
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
 
 
         if (!response.ok) {
 
             throw new Error(
-                "Server returned HTTP " + response.status
+                "Server returned HTTP " +
+                response.status
             );
         }
 
 
-        const result = await response.json();
+        const result =
+            await response.json();
 
 
         console.log(
-            "Server response:",
+            "Login response:",
             result
         );
 
 
+        // -----------------------------
+        // Login failed
+        // -----------------------------
+
         if (!result.success) {
 
-            showMessage(
-                result.message || "Invalid login details."
+            showLoginMessage(
+                result.message ||
+                "Invalid login details."
             );
 
             return;
@@ -180,12 +235,14 @@ async function login() {
 
 
         // -----------------------------
-        // SUCCESS
+        // Login successful
         // -----------------------------
 
-        sessionToken = result.token;
+        sessionToken =
+            result.token;
 
-        loggedInUser = result.name;
+        loggedInUser =
+            result.name;
 
 
         console.log(
@@ -197,17 +254,19 @@ async function login() {
             loggedInUser
         );
 
-
         console.log(
             "Session token received:",
-            sessionToken ? "YES" : "NO"
+            sessionToken
+                ? "YES"
+                : "NO"
         );
 
 
-        showMessage(
-            "Login successful. Welcome, " +
-            loggedInUser + "!"
-        );
+        // -----------------------------
+        // Open Home
+        // -----------------------------
+
+        showHome();
 
 
     } catch (error) {
@@ -218,16 +277,18 @@ async function login() {
         );
 
 
-        showMessage(
+        showLoginMessage(
             "Unable to connect to the server. Please try again."
         );
 
 
     } finally {
 
-        loginButton.disabled = false;
+        loginButton.disabled =
+            false;
 
-        loginButton.textContent = "LOGIN";
+        loginButton.textContent =
+            "LOGIN";
 
     }
 
@@ -235,11 +296,209 @@ async function login() {
 
 
 // ============================================
-// MESSAGE
+// SHOW HOME
 // ============================================
 
-function showMessage(message) {
+function showHome() {
 
-    loginMessage.textContent = message;
+    loginScreen.classList.add(
+        "hidden"
+    );
+
+    homeScreen.classList.remove(
+        "hidden"
+    );
+
+
+    userName.textContent =
+        loggedInUser;
+
+
+    showLoginMessage("");
+
+    showHomeMessage("");
+
+
+    console.log(
+        "HOME SCREEN DISPLAYED"
+    );
+}
+
+
+// ============================================
+// START PRACTICE
+// ============================================
+
+function startPractice(section) {
+
+    // ----------------------------------------
+    // Quiz engine will be connected later.
+    // ----------------------------------------
+
+    console.log(
+        "Selected section:",
+        section
+    );
+
+
+    showHomeMessage(
+        section +
+        " selected. Quiz engine will be connected in the next phase."
+    );
+
+}
+
+
+// ============================================
+// LOGOUT
+// ============================================
+
+async function logout() {
+
+    // -----------------------------
+    // If there is no session
+    // -----------------------------
+
+    if (!sessionToken) {
+
+        resetApplication();
+
+        return;
+    }
+
+
+    logoutButton.disabled = true;
+
+    logoutButton.textContent =
+        "LOGGING OUT...";
+
+
+    try {
+
+        const formData =
+            new URLSearchParams();
+
+        formData.append(
+            "action",
+            "logout"
+        );
+
+        formData.append(
+            "token",
+            sessionToken
+        );
+
+
+        const response =
+            await fetch(
+                API_URL,
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        console.log(
+            "Logout response:",
+            result
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "LOGOUT ERROR:",
+            error
+        );
+
+    } finally {
+
+        resetApplication();
+
+    }
+
+}
+
+
+// ============================================
+// RESET APPLICATION
+// ============================================
+
+function resetApplication() {
+
+    // Clear authentication state
+
+    sessionToken = null;
+
+    loggedInUser = null;
+
+
+    // Clear input fields
+
+    nameInput.value = "";
+
+    passwordInput.value = "";
+
+
+    // Clear messages
+
+    showLoginMessage("");
+
+    showHomeMessage("");
+
+
+    // Return to login
+
+    homeScreen.classList.add(
+        "hidden"
+    );
+
+    loginScreen.classList.remove(
+        "hidden"
+    );
+
+
+    logoutButton.disabled =
+        false;
+
+    logoutButton.textContent =
+        "LOGOUT";
+
+
+    loginButton.disabled =
+        false;
+
+    loginButton.textContent =
+        "LOGIN";
+
+
+    console.log(
+        "APPLICATION RESET"
+    );
+
+}
+
+
+// ============================================
+// MESSAGE HELPERS
+// ============================================
+
+function showLoginMessage(message) {
+
+    loginMessage.textContent =
+        message;
+
+}
+
+
+function showHomeMessage(message) {
+
+    homeMessage.textContent =
+        message;
 
 }
