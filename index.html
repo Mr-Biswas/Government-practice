@@ -1,48 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Government Prep Practice</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
+
 <body>
 
     <main id="app">
 
-        <section id="login-screen">
-            <h1>Government Prep Practice</h1>
-            <p>Practice. Improve. Repeat.</p>
+        <!-- ================================= -->
+        <!-- LOGIN SCREEN -->
+        <!-- ================================= -->
 
-            <div>
-                <label for="name">Name</label>
+        <section id="login-screen">
+
+            <h1>Government Prep Practice</h1>
+
+            <p class="subtitle">
+                Practice. Improve. Repeat.
+            </p>
+
+
+            <div class="form-group">
+
+                <label for="name">
+                    Name
+                </label>
+
                 <input
                     type="text"
                     id="name"
                     placeholder="Enter your name"
+                    autocomplete="name"
                 >
+
             </div>
 
-            <div>
-                <label for="password">Password / PIN</label>
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password / PIN
+                </label>
+
                 <input
                     type="password"
                     id="password"
                     placeholder="Enter your password"
+                    autocomplete="current-password"
                 >
+
             </div>
 
-            <button id="login-btn">LOGIN</button>
 
-            <p id="login-message"></p>
+            <button
+                id="login-btn"
+                class="primary-btn"
+            >
+                LOGIN
+            </button>
+
+
+            <p
+                id="login-message"
+                class="message"
+            ></p>
+
+        </section>
+
+
+
+        <!-- ================================= -->
+        <!-- HOME SCREEN -->
+        <!-- ================================= -->
+
+        <section
+            id="home-screen"
+            class="hidden"
+        >
+
+            <div class="home-header">
+
+                <div>
+
+                    <h1>
+                        Welcome, <span id="user-name"></span> 👋
+                    </h1>
+
+                    <p class="subtitle">
+                        Choose your practice
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div id="section-list">
+
+
+                <!-- ========================= -->
+                <!-- MATHS -->
+                <!-- ========================= -->
+
+                <div class="section-card">
+
+                    <div class="section-icon">
+                        🧮
+                    </div>
+
+                    <div class="section-info">
+
+                        <h2>
+                            Maths
+                        </h2>
+
+                        <p>
+                            10 Questions
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="start-btn"
+                        data-section="Maths"
+                    >
+                        START
+                    </button>
+
+                </div>
+
+
+
+                <!-- ========================= -->
+                <!-- LOGICAL REASONING -->
+                <!-- ========================= -->
+
+                <div class="section-card">
+
+                    <div class="section-icon">
+                        🧠
+                    </div>
+
+                    <div class="section-info">
+
+                        <h2>
+                            Logical Reasoning
+                        </h2>
+
+                        <p>
+                            10 Questions
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="start-btn"
+                        data-section="Logical Reasoning"
+                    >
+                        START
+                    </button>
+
+                </div>
+
+
+
+                <!-- ========================= -->
+                <!-- EXCEL & BI -->
+                <!-- ========================= -->
+
+                <div class="section-card">
+
+                    <div class="section-icon">
+                        📊
+                    </div>
+
+                    <div class="section-info">
+
+                        <h2>
+                            Excel &amp; BI
+                        </h2>
+
+                        <p>
+                            10 Questions
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="start-btn"
+                        data-section="Excel &amp; BI"
+                    >
+                        START
+                    </button>
+
+                </div>
+
+
+
+                <!-- ========================= -->
+                <!-- PYTHON & SQL -->
+                <!-- ========================= -->
+
+                <div class="section-card">
+
+                    <div class="section-icon">
+                        🐍
+                    </div>
+
+                    <div class="section-info">
+
+                        <h2>
+                            Python &amp; SQL
+                        </h2>
+
+                        <p>
+                            10 Questions
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="start-btn"
+                        data-section="Python &amp; SQL"
+                    >
+                        START
+                    </button>
+
+                </div>
+
+
+
+                <!-- ========================= -->
+                <!-- MISCELLANEOUS -->
+                <!-- ========================= -->
+
+                <div class="section-card">
+
+                    <div class="section-icon">
+                        📚
+                    </div>
+
+                    <div class="section-info">
+
+                        <h2>
+                            Miscellaneous
+                        </h2>
+
+                        <p>
+                            10 Questions
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="start-btn"
+                        data-section="Miscellaneous"
+                    >
+                        START
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================= -->
+            <!-- LOGOUT -->
+            <!-- ========================= -->
+
+            <button
+                id="logout-btn"
+                class="logout-btn"
+            >
+                LOGOUT
+            </button>
+
+
+            <p
+                id="home-message"
+                class="message"
+            ></p>
+
         </section>
 
     </main>
 
-    <script src="app.js?v=2"></script>
+
+    <!-- JavaScript -->
+
+    <script src="app.js?v=3"></script>
 
 </body>
+
 </html>
