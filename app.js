@@ -357,6 +357,9 @@ async function startPractice(section) {
         // Request questions from Google Apps Script
         const response = await fetch(API_URL, {
             method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
             body: requestData.toString()
         });
 
