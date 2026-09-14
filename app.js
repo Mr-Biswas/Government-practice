@@ -23,6 +23,12 @@ let sessionToken = null;
 
 let loggedInUser = null;
 
+// Quiz state
+let quizSection = "";
+let quizQuestions = [];
+let currentQuestionIndex = 0;
+let selectedAnswer = null;
+
 
 // ============================================
 // DOM ELEMENTS
@@ -329,24 +335,77 @@ function showHome() {
 // START PRACTICE
 // ============================================
 
-function startPractice(section) {
+async function startPractice(section) {
+    // Check whether the user is logged in
+    if (!sessionToken) {
+        alert("Your session has expired. Please log in again.");
+        showScreen("login-screen");
+        return;
+    }
 
-    // ----------------------------------------
-    // Quiz engine will be connected later.
-    // ----------------------------------------
+    // Store selected section
+    quizSection = section;
 
-    console.log(
-        "Selected section:",
-        section
-    );
+    try {
+        // Request questions from Google Apps Script
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                action: "getQuestions",
+                token: sessionToken,
+                section: section
+            })
+        });
 
+        const data = await response.json();
 
-    showHomeMessage(
-        section +
-        " selected. Quiz engine will be connected in the next phase."
-    );
+        // Handle backend error
+        if (!data.success) {
+            alert(
+                data.message ||
+                "Unable to load questions."
+            );
+            return;
+        }
 
+        // Store questions in browser memory
+        quizQuestions = data.questions;
+        currentQuestionIndex = 0;
+        selectedAnswer = null;
+
+        // Display selected section
+        document.getElementById("quiz-section-name").textContent = section;
+
+        // Open quiz screen
+        showScreen("quiz-screen");
+
+        // Display first question
+        renderQuestion();
+
+    } catch (error) {
+        console.error("Error loading questions:", error);
+
+        alert(
+            "Unable to connect to the server. Please try again."
+        );
+    }
 }
+
+//     console.log(
+//         "Selected section:",
+//         section
+//     );
+
+
+//     showHomeMessage(
+//         section +
+//         " selected. Quiz engine will be connected in the next phase."
+//     );
+
+// }
 
 
 // ============================================
@@ -502,3 +561,96 @@ function showHomeMessage(message) {
         message;
 
 }
+
+function renderQuestion() {
+    // Make sure questions are available
+    if (!quizQuestions || quizQuestions.length === 0) {
+        return;
+    }
+
+    const question = quizQuestions[currentQuestionIndex];
+
+    // Question number
+    document.getElementById("question-counter").textContent =
+        `Question ${currentQuestionIndex + 1} of ${quizQuestions.length}`;
+
+    // Question text
+    document.getElementById("question-text").textContent =
+        question.question;
+
+    // Options
+    document.getElementById("option-a").textContent =
+        question.optionA;
+
+    document.getElementById("option-b").textContent =
+        question.optionB;
+
+    document.getElementById("option-c").textContent =
+        question.optionC;
+
+    document.getElementById("option-d").textContent =
+        question.optionD;
+
+    // Reset answer
+    selectedAnswer = null;
+
+    // Remove previous selection
+    document.querySelectorAll(".option-btn").forEach(button => {
+        button.classList.remove("selected");
+    });
+
+    // Disable Next button
+    document.getElementById("next-question-btn").disabled = true;
+}
+
+document.querySelectorAll(".option-btn").forEach(button => {
+
+    button.addEventListener("click", function () {
+
+        // Store selected answer
+        selectedAnswer = this.dataset.option;
+
+        // Remove selection from all options
+        document.querySelectorAll(".option-btn").forEach(option => {
+            option.classList.remove("selected");
+        });
+
+        // Highlight selected option
+        this.classList.add("selected");
+
+        // Enable Next button
+        document.getElementById("next-question-btn").disabled = false;
+    });
+
+});
+
+
+
+
+document.getElementById("next-question-btn").addEventListener("click", function () {
+
+    // Don't continue without an answer
+    if (!selectedAnswer) {
+        return;
+    }
+
+    // Move to the next question
+    currentQuestionIndex++;
+
+    // Check whether all questions are completed
+    if (currentQuestionIndex >= quizQuestions.length) {
+
+        alert("Basic quiz flow completed successfully.");
+
+        // Return to home temporarily
+        showScreen("home-screen");
+
+        return;
+    }
+
+    // Display next question
+    renderQuestion();
+
+});
+
+
