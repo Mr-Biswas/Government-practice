@@ -492,3 +492,90 @@ button:disabled {
     }
 
 }
+
+/* ============================================
+   QUIZ SCREEN - PHASE 4B FIX
+   ============================================ */
+
+#quiz-screen {
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+
+/* Quiz header */
+
+#quiz-screen .quiz-header {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto 20px auto;
+}
+
+
+/* Quiz card */
+
+#quiz-screen .quiz-card {
+    display: block;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+
+/* Question */
+
+#quiz-screen .question-text {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+/* Options */
+
+#quiz-screen .options-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+    gap: 12px;
+}
+
+
+/* Option buttons */
+
+#quiz-screen .option-btn {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+/* Next button */
+
+#quiz-screen #next-question-btn {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+/* ============================================
+   MOBILE
+   ============================================ */
+
+@media (max-width: 600px) {
+
+    #quiz-screen {
+        padding: 15px;
+    }
+
+    #quiz-screen .quiz-card {
+        padding: 18px;
+    }
+
+}
