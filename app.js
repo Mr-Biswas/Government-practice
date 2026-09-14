@@ -66,6 +66,9 @@ const logoutButton =
 const homeMessage =
     document.getElementById("home-message");
 
+const quizScreen =
+    document.getElementById("quiz-screen");
+
 
 // Section buttons
 
@@ -315,6 +318,10 @@ function showHome() {
         "hidden"
     );
 
+    quizScreen.classList.add(
+        "hidden"
+    );
+
 
     userName.textContent =
         loggedInUser;
@@ -332,61 +339,141 @@ function showHome() {
 
 
 // ============================================
+// SHOW QUIZ
+// ============================================
+
+function showQuiz() {
+
+    loginScreen.classList.add(
+        "hidden"
+    );
+
+    homeScreen.classList.add(
+        "hidden"
+    );
+
+    quizScreen.classList.remove(
+        "hidden"
+    );
+
+
+    console.log(
+        "QUIZ SCREEN DISPLAYED"
+    );
+}
+
+
+// ============================================
 // START PRACTICE
 // ============================================
 
 async function startPractice(section) {
+
     // Check whether the user is logged in
     if (!sessionToken) {
-        alert("Your session has expired. Please log in again.");
-        showScreen("login-screen");
+
+        alert(
+            "Your session has expired. Please log in again."
+        );
+
+
+        loginScreen.classList.remove(
+            "hidden"
+        );
+
+        homeScreen.classList.add(
+            "hidden"
+        );
+
+        quizScreen.classList.add(
+            "hidden"
+        );
+
         return;
     }
+
 
     // Store selected section
     quizSection = section;
 
-    try {
-        // Request questions from Google Apps Script
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8"
-            },
-            body: JSON.stringify({
-                action: "getQuestions",
-                token: sessionToken,
-                section: section
-            })
-        });
 
-        const data = await response.json();
+    try {
+
+        // Request questions from Google Apps Script
+        const response = await fetch(
+            API_URL,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "text/plain;charset=utf-8"
+                },
+
+                body: JSON.stringify({
+                    action: "getQuestions",
+                    token: sessionToken,
+                    section: section
+                })
+            }
+        );
+
+
+        // Convert response to JSON
+        const data =
+            await response.json();
+
 
         // Handle backend error
         if (!data.success) {
+
             alert(
                 data.message ||
                 "Unable to load questions."
             );
+
             return;
         }
 
+
         // Store questions in browser memory
-        quizQuestions = data.questions;
-        currentQuestionIndex = 0;
-        selectedAnswer = null;
+        quizQuestions =
+            data.questions;
+
+
+        // Start from first question
+        currentQuestionIndex =
+            0;
+
+
+        // Reset selected answer
+        selectedAnswer =
+            null;
+
 
         // Display selected section
-        document.getElementById("quiz-section-name").textContent = section;
+        document.getElementById(
+            "quiz-section-name"
+        ).textContent =
+            section;
 
-        // Open quiz screen
-        showScreen("quiz-screen");
+
+        // Show quiz screen
+        showQuiz();
+
 
         // Display first question
         renderQuestion();
 
-    } catch (error) {
-        console.error("Error loading questions:", error);
+    }
+
+    catch (error) {
+
+        console.error(
+            "Error loading questions:",
+            error
+        );
+
 
         alert(
             "Unable to connect to the server. Please try again."
@@ -394,263 +481,186 @@ async function startPractice(section) {
     }
 }
 
-//     console.log(
-//         "Selected section:",
-//         section
-//     );
-
-
-//     showHomeMessage(
-//         section +
-//         " selected. Quiz engine will be connected in the next phase."
-//     );
-
-// }
-
 
 // ============================================
-// LOGOUT
+// RENDER QUESTION
 // ============================================
 
-async function logout() {
+function renderQuestion() {
 
-    // -----------------------------
-    // If there is no session
-    // -----------------------------
-
-    if (!sessionToken) {
-
-        resetApplication();
-
+    // Make sure questions are available
+    if (
+        !quizQuestions ||
+        quizQuestions.length === 0
+    ) {
         return;
     }
 
 
-    logoutButton.disabled = true;
+    const question =
+        quizQuestions[
+            currentQuestionIndex
+        ];
 
-    logoutButton.textContent =
-        "LOGGING OUT...";
+
+    // Update question counter
+    document.getElementById(
+        "question-counter"
+    ).textContent =
+        `Question ${
+            currentQuestionIndex + 1
+        } of ${
+            quizQuestions.length
+        }`;
 
 
-    try {
+    // Display question
+    document.getElementById(
+        "question-text"
+    ).textContent =
+        question.question;
 
-        const formData =
-            new URLSearchParams();
 
-        formData.append(
-            "action",
-            "logout"
+    // Display options
+    document.getElementById(
+        "option-a"
+    ).textContent =
+        question.optionA;
+
+    document.getElementById(
+        "option-b"
+    ).textContent =
+        question.optionB;
+
+    document.getElementById(
+        "option-c"
+    ).textContent =
+        question.optionC;
+
+    document.getElementById(
+        "option-d"
+    ).textContent =
+        question.optionD;
+
+
+    // Reset selected answer
+    selectedAnswer =
+        null;
+
+
+    // Remove previous selection
+    document.querySelectorAll(
+        ".option-btn"
+    ).forEach(
+        function(button) {
+
+            button.classList.remove(
+                "selected"
+            );
+
+        }
+    );
+
+
+    // Disable Next button
+    document.getElementById(
+        "next-question-btn"
+    ).disabled =
+        true;
+}
+
+
+// ============================================
+// OPTION SELECTION
+// ============================================
+
+document.querySelectorAll(
+    ".option-btn"
+).forEach(
+    function(button) {
+
+        button.addEventListener(
+            "click",
+            function() {
+
+                // Store selected answer
+                selectedAnswer =
+                    this.dataset.option;
+
+
+                // Remove previous selection
+                document.querySelectorAll(
+                    ".option-btn"
+                ).forEach(
+                    function(option) {
+
+                        option.classList.remove(
+                            "selected"
+                        );
+
+                    }
+                );
+
+
+                // Highlight selected option
+                this.classList.add(
+                    "selected"
+                );
+
+
+                // Enable Next button
+                document.getElementById(
+                    "next-question-btn"
+                ).disabled =
+                    false;
+
+            }
         );
 
-        formData.append(
-            "token",
-            sessionToken
-        );
+    }
+);
 
 
-        const response =
-            await fetch(
-                API_URL,
-                {
-                    method: "POST",
-                    body: formData
-                }
+// ============================================
+// NEXT QUESTION
+// ============================================
+
+document.getElementById(
+    "next-question-btn"
+).addEventListener(
+    "click",
+    function() {
+
+        // Make sure an answer is selected
+        if (!selectedAnswer) {
+            return;
+        }
+
+
+        // Move to next question
+        currentQuestionIndex++;
+
+
+        // Check whether all questions are completed
+        if (
+            currentQuestionIndex >=
+            quizQuestions.length
+        ) {
+
+            alert(
+                "Basic quiz flow completed successfully."
             );
 
 
-        const result =
-            await response.json();
+            // Return to Home
+            showHome();
+
+            return;
+        }
 
 
-        console.log(
-            "Logout response:",
-            result
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "LOGOUT ERROR:",
-            error
-        );
-
-    } finally {
-
-        resetApplication();
+        // Display next question
+        renderQuestion();
 
     }
-
-}
-
-
-// ============================================
-// RESET APPLICATION
-// ============================================
-
-function resetApplication() {
-
-    // Clear authentication state
-
-    sessionToken = null;
-
-    loggedInUser = null;
-
-
-    // Clear input fields
-
-    nameInput.value = "";
-
-    passwordInput.value = "";
-
-
-    // Clear messages
-
-    showLoginMessage("");
-
-    showHomeMessage("");
-
-
-    // Return to login
-
-    homeScreen.classList.add(
-        "hidden"
-    );
-
-    loginScreen.classList.remove(
-        "hidden"
-    );
-
-
-    logoutButton.disabled =
-        false;
-
-    logoutButton.textContent =
-        "LOGOUT";
-
-
-    loginButton.disabled =
-        false;
-
-    loginButton.textContent =
-        "LOGIN";
-
-
-    console.log(
-        "APPLICATION RESET"
-    );
-
-}
-
-
-// ============================================
-// MESSAGE HELPERS
-// ============================================
-
-function showLoginMessage(message) {
-
-    loginMessage.textContent =
-        message;
-
-}
-
-
-function showHomeMessage(message) {
-
-    homeMessage.textContent =
-        message;
-
-}
-
-function renderQuestion() {
-    // Make sure questions are available
-    if (!quizQuestions || quizQuestions.length === 0) {
-        return;
-    }
-
-    const question = quizQuestions[currentQuestionIndex];
-
-    // Question number
-    document.getElementById("question-counter").textContent =
-        `Question ${currentQuestionIndex + 1} of ${quizQuestions.length}`;
-
-    // Question text
-    document.getElementById("question-text").textContent =
-        question.question;
-
-    // Options
-    document.getElementById("option-a").textContent =
-        question.optionA;
-
-    document.getElementById("option-b").textContent =
-        question.optionB;
-
-    document.getElementById("option-c").textContent =
-        question.optionC;
-
-    document.getElementById("option-d").textContent =
-        question.optionD;
-
-    // Reset answer
-    selectedAnswer = null;
-
-    // Remove previous selection
-    document.querySelectorAll(".option-btn").forEach(button => {
-        button.classList.remove("selected");
-    });
-
-    // Disable Next button
-    document.getElementById("next-question-btn").disabled = true;
-}
-
-document.querySelectorAll(".option-btn").forEach(button => {
-
-    button.addEventListener("click", function () {
-
-        // Store selected answer
-        selectedAnswer = this.dataset.option;
-
-        // Remove selection from all options
-        document.querySelectorAll(".option-btn").forEach(option => {
-            option.classList.remove("selected");
-        });
-
-        // Highlight selected option
-        this.classList.add("selected");
-
-        // Enable Next button
-        document.getElementById("next-question-btn").disabled = false;
-    });
-
-});
-
-
-
-
-document.getElementById("next-question-btn").addEventListener("click", function () {
-
-    // Don't continue without an answer
-    if (!selectedAnswer) {
-        return;
-    }
-
-    // Move to the next question
-    currentQuestionIndex++;
-
-    // Check whether all questions are completed
-    if (currentQuestionIndex >= quizQuestions.length) {
-
-        alert("Basic quiz flow completed successfully.");
-
-        // Return to home temporarily
-        showScreen("home-screen");
-
-        return;
-    }
-
-    // Display next question
-    renderQuestion();
-
-});
-
-
+);
