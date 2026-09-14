@@ -39,6 +39,7 @@ let selectedAnswer = null;
 // One answer per question
 
 let userAnswers = [];
+let quizStartTime = null;
 
 
 // ============================================
@@ -400,6 +401,7 @@ function showHomeMessage(message) {
 function showHome() {
 
     stopQuestionTimer();
+    quizStartTime = null;
 
 
     loginScreen.classList.add(
@@ -497,6 +499,7 @@ function showLogin() {
 async function logout() {
 
     stopQuestionTimer();
+    quizStartTime = null;
 
 
     if (sessionToken) {
@@ -692,7 +695,7 @@ async function startPractice(section) {
         userAnswers =
             [];
 
-
+        quizStartTime = Date.now();
         currentQuestionIndex =
             0;
 
@@ -1190,6 +1193,8 @@ async function submitQuiz() {
             JSON.stringify(
                 userAnswers
             )
+
+        formData.append("quizStartTime", String(quizStartTime || "")
         );
 
 
