@@ -308,141 +308,263 @@
 
 
 
-        <!-- ================================= -->
-        <!-- QUIZ SCREEN -->
-        <!-- ================================= -->
+<!-- ================================= -->
+<!-- QUIZ SCREEN -->
+<!-- ================================= -->
 
-        <section
-            id="quiz-screen"
-            class="hidden"
+<section
+    id="quiz-screen"
+    class="hidden"
+>
+
+    <!-- QUIZ HEADER -->
+
+    <div class="quiz-header">
+
+        <div>
+
+            <h2 id="quiz-section-name">
+                Practice
+            </h2>
+
+            <p id="question-counter">
+                Question 1 of 10
+            </p>
+
+            <p id="question-timer">
+                Time: 15s
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- QUIZ CARD -->
+
+    <div class="quiz-card">
+
+        <div
+            class="question-text"
+            id="question-text"
         >
+            Question will appear here.
+        </div>
 
-            <div class="quiz-header">
 
-                <div>
+        <div class="options-container">
 
-                    <h2 id="quiz-section-name">
-                        Practice
-                    </h2>
 
-                    <p id="question-counter">
-                        Question 1 of 10
-                    </p>
+            <!-- OPTION A -->
 
-                </div>
+            <button
+                type="button"
+                class="option-btn"
+                data-option="A"
+            >
+
+                <span class="option-label">
+                    A
+                </span>
+
+                <span
+                    class="option-text"
+                    id="option-a"
+                >
+                    Option A
+                </span>
+
+            </button>
+
+
+            <!-- OPTION B -->
+
+            <button
+                type="button"
+                class="option-btn"
+                data-option="B"
+            >
+
+                <span class="option-label">
+                    B
+                </span>
+
+                <span
+                    class="option-text"
+                    id="option-b"
+                >
+                    Option B
+                </span>
+
+            </button>
+
+
+            <!-- OPTION C -->
+
+            <button
+                type="button"
+                class="option-btn"
+                data-option="C"
+            >
+
+                <span class="option-label">
+                    C
+                </span>
+
+                <span
+                    class="option-text"
+                    id="option-c"
+                >
+                    Option C
+                </span>
+
+            </button>
+
+
+            <!-- OPTION D -->
+
+            <button
+                type="button"
+                class="option-btn"
+                data-option="D"
+            >
+
+                <span class="option-label">
+                    D
+                </span>
+
+                <span
+                    class="option-text"
+                    id="option-d"
+                >
+                    Option D
+                </span>
+
+            </button>
+
+
+        </div>
+
+
+        <!-- NEXT BUTTON -->
+
+        <button
+            type="button"
+            id="next-question-btn"
+            class="primary-btn"
+            disabled
+        >
+            Next →
+        </button>
+
+    </div>
+
+
+    <!-- ================================= -->
+    <!-- RESULT SCREEN -->
+    <!-- ================================= -->
+
+    <div
+        id="result-screen"
+        class="hidden"
+    >
+
+        <div class="result-card">
+
+            <h2>
+                Practice Complete 🎉
+            </h2>
+
+
+            <p id="result-section">
+                Section
+            </p>
+
+
+            <!-- FINAL SCORE -->
+
+            <div class="score-display">
+
+                <span id="final-score">
+                    0
+                </span>
+
+                <span class="score-total">
+                    / 10
+                </span>
 
             </div>
 
 
-            <div class="quiz-card">
+            <!-- RESULT DETAILS -->
 
-                <div
-                    class="question-text"
-                    id="question-text"
-                >
-                    Question will appear here.
-                </div>
+            <div class="result-details">
 
 
-                <div class="options-container">
+                <!-- CORRECT -->
 
+                <div class="result-item">
 
-                    <button
-                        class="option-btn"
-                        data-option="A"
-                    >
+                    <span>
+                        Correct
+                    </span>
 
-                        <span class="option-label">
-                            A
-                        </span>
-
-                        <span
-                            class="option-text"
-                            id="option-a"
-                        >
-                            Option A
-                        </span>
-
-                    </button>
-
-
-
-                    <button
-                        class="option-btn"
-                        data-option="B"
-                    >
-
-                        <span class="option-label">
-                            B
-                        </span>
-
-                        <span
-                            class="option-text"
-                            id="option-b"
-                        >
-                            Option B
-                        </span>
-
-                    </button>
-
-
-
-                    <button
-                        class="option-btn"
-                        data-option="C"
-                    >
-
-                        <span class="option-label">
-                            C
-                        </span>
-
-                        <span
-                            class="option-text"
-                            id="option-c"
-                        >
-                            Option C
-                        </span>
-
-                    </button>
-
-
-
-                    <button
-                        class="option-btn"
-                        data-option="D"
-                    >
-
-                        <span class="option-label">
-                            D
-                        </span>
-
-                        <span
-                            class="option-text"
-                            id="option-d"
-                        >
-                            Option D
-                        </span>
-
-                    </button>
-
+                    <strong id="final-correct">
+                        0
+                    </strong>
 
                 </div>
 
 
-                <button
-                    id="next-question-btn"
-                    class="primary-btn"
-                    disabled
-                >
-                    Next →
-                </button>
+                <!-- WRONG -->
+
+                <div class="result-item">
+
+                    <span>
+                        Wrong
+                    </span>
+
+                    <strong id="final-wrong">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <!-- TOTAL -->
+
+                <div class="result-item">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong id="final-total">
+                        10
+                    </strong>
+
+                </div>
+
 
             </div>
 
-        </section>
+
+            <!-- BACK TO HOME -->
+
+            <button
+                type="button"
+                id="result-home-btn"
+                class="primary-btn"
+            >
+                BACK TO HOME
+            </button>
 
 
-    </main>
+        </div>
+
+    </div>
+
+</section>
 
 
     <!-- ================================= -->
