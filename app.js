@@ -4,7 +4,7 @@
 // Authentication + Quiz + Timer + Scoring
 // ============================================
 
-console.log("APP.JS V1.0 LOADED");
+console.log("APP.JS V1.0 FINAL LOADED");
 
 
 // ============================================
@@ -28,12 +28,15 @@ let loggedInUser = null;
 // ============================================
 
 let quizSection = "";
+
 let quizQuestions = [];
+
 let currentQuestionIndex = 0;
+
 let selectedAnswer = null;
 
 
-// User answers
+// One answer per question
 
 let userAnswers = [];
 
@@ -43,6 +46,7 @@ let userAnswers = [];
 // ============================================
 
 let questionTimer = null;
+
 let timeRemaining = 15;
 
 
@@ -177,6 +181,12 @@ resultHomeButton.addEventListener(
 );
 
 
+nextQuestionButton.addEventListener(
+    "click",
+    nextQuestion
+);
+
+
 startButtons.forEach(
     function(button) {
 
@@ -210,12 +220,6 @@ optionButtons.forEach(
         );
 
     }
-);
-
-
-nextQuestionButton.addEventListener(
-    "click",
-    nextQuestion
 );
 
 
@@ -279,6 +283,15 @@ async function login() {
                     body: formData
                 }
             );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+        }
 
 
         const result =
@@ -352,6 +365,11 @@ async function login() {
 
 function showLoginMessage(message) {
 
+    if (!loginMessage) {
+        return;
+    }
+
+
     loginMessage.textContent =
         message;
 
@@ -363,6 +381,11 @@ function showLoginMessage(message) {
 // ============================================
 
 function showHomeMessage(message) {
+
+    if (!homeMessage) {
+        return;
+    }
+
 
     homeMessage.textContent =
         message;
@@ -391,10 +414,41 @@ function showHome() {
         "hidden"
     );
 
-
     resultScreen.classList.add(
         "hidden"
     );
+
+
+    // Restore quiz card/header
+    // for the next practice session
+
+    const quizCard =
+        document.querySelector(
+            ".quiz-card"
+        );
+
+    const quizHeader =
+        document.querySelector(
+            ".quiz-header"
+        );
+
+
+    if (quizCard) {
+
+        quizCard.classList.remove(
+            "hidden"
+        );
+
+    }
+
+
+    if (quizHeader) {
+
+        quizHeader.classList.remove(
+            "hidden"
+        );
+
+    }
 
 
     userName.textContent =
@@ -402,6 +456,7 @@ function showHome() {
 
 
     showLoginMessage("");
+
     showHomeMessage("");
 
 }
@@ -425,6 +480,10 @@ function showLogin() {
     );
 
     quizScreen.classList.add(
+        "hidden"
+    );
+
+    resultScreen.classList.add(
         "hidden"
     );
 
@@ -469,6 +528,7 @@ async function logout() {
 
         }
 
+
         catch (error) {
 
             console.error(
@@ -486,6 +546,9 @@ async function logout() {
 
     loggedInUser =
         null;
+
+    quizSection =
+        "";
 
     quizQuestions =
         [];
@@ -518,6 +581,16 @@ async function startPractice(section) {
         );
 
         showLogin();
+
+        return;
+    }
+
+
+    if (!section) {
+
+        alert(
+            "Practice section not found."
+        );
 
         return;
     }
@@ -569,6 +642,15 @@ async function startPractice(section) {
             );
 
 
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+        }
+
+
         const data =
             await response.json();
 
@@ -584,6 +666,19 @@ async function startPractice(section) {
             alert(
                 data.message ||
                 "Unable to load questions."
+            );
+
+            return;
+        }
+
+
+        if (
+            !Array.isArray(data.questions) ||
+            data.questions.length !== 10
+        ) {
+
+            alert(
+                "The practice session did not return exactly 10 questions."
             );
 
             return;
@@ -611,6 +706,26 @@ async function startPractice(section) {
 
 
         resultScreen.classList.add(
+            "hidden"
+        );
+
+
+        const quizCard =
+            document.querySelector(
+                ".quiz-card"
+            );
+
+        const quizHeader =
+            document.querySelector(
+                ".quiz-header"
+            );
+
+
+        quizCard.classList.remove(
+            "hidden"
+        );
+
+        quizHeader.classList.remove(
             "hidden"
         );
 
@@ -691,6 +806,7 @@ function renderQuestion() {
 
 
     if (!question) {
+
         return;
     }
 
@@ -703,20 +819,20 @@ function renderQuestion() {
 
 
     questionText.textContent =
-        question.question;
+        question.question || "";
 
 
     optionA.textContent =
-        question.options.A;
+        question.options.A || "";
 
     optionB.textContent =
-        question.options.B;
+        question.options.B || "";
 
     optionC.textContent =
-        question.options.C;
+        question.options.C || "";
 
     optionD.textContent =
-        question.options.D;
+        question.options.D || "";
 
 
     selectedAnswer =
@@ -748,6 +864,14 @@ function renderQuestion() {
 // ============================================
 
 function selectAnswer(option) {
+
+    if (
+        questionTimer === null
+    ) {
+
+        return;
+    }
+
 
     selectedAnswer =
         option;
@@ -783,10 +907,10 @@ function selectAnswer(option) {
 
 
 // ============================================
-// SAVE CURRENT ANSWER
+// RECORD CURRENT ANSWER
 // ============================================
 
-function saveCurrentAnswer() {
+function recordCurrentAnswer() {
 
     const question =
         quizQuestions[
@@ -795,18 +919,36 @@ function saveCurrentAnswer() {
 
 
     if (!question) {
+
         return;
     }
 
 
+    const answer =
+        selectedAnswer || "";
+
+
     userAnswers.push({
 
-        id: question.id,
+        id:
+            question.id,
 
         answer:
-            selectedAnswer || ""
+            answer
 
     });
+
+
+    console.log(
+        "RECORDED ANSWER:",
+        {
+            question:
+                question.id,
+
+            answer:
+                answer
+        }
+    );
 
 }
 
@@ -818,6 +960,7 @@ function saveCurrentAnswer() {
 function nextQuestion() {
 
     if (!selectedAnswer) {
+
         return;
     }
 
@@ -825,7 +968,7 @@ function nextQuestion() {
     stopQuestionTimer();
 
 
-    saveCurrentAnswer();
+    recordCurrentAnswer();
 
 
     moveToNextQuestion();
@@ -870,9 +1013,10 @@ function handleTimeout() {
     );
 
 
-    // Empty answer = wrong
+    // No selected answer means
+    // unanswered / wrong.
 
-    saveCurrentAnswer();
+    recordCurrentAnswer();
 
 
     moveToNextQuestion();
@@ -931,6 +1075,7 @@ function startQuestionTimer() {
 function updateTimerDisplay() {
 
     if (!questionTimerElement) {
+
         return;
     }
 
@@ -983,6 +1128,42 @@ async function submitQuiz() {
         "Submitting...";
 
 
+    console.log(
+        "SUBMITTING ANSWERS:",
+        userAnswers
+    );
+
+
+    // Safety check
+
+    if (
+        userAnswers.length !==
+        quizQuestions.length
+    ) {
+
+        console.error(
+            "ANSWER COUNT MISMATCH",
+            {
+                questions:
+                    quizQuestions.length,
+
+                answers:
+                    userAnswers.length
+            }
+        );
+
+
+        alert(
+            "There was a problem preparing your quiz result. Please try again."
+        );
+
+
+        showHome();
+
+        return;
+    }
+
+
     try {
 
         const formData =
@@ -1006,7 +1187,9 @@ async function submitQuiz() {
 
         formData.append(
             "answers",
-            JSON.stringify(userAnswers)
+            JSON.stringify(
+                userAnswers
+            )
         );
 
 
@@ -1018,6 +1201,15 @@ async function submitQuiz() {
                     body: formData
                 }
             );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+        }
 
 
         const result =
@@ -1083,18 +1275,33 @@ function showResult(result) {
     );
 
 
-    document.querySelector(
-        ".quiz-card"
-    ).classList.add(
-        "hidden"
-    );
+    const quizCard =
+        document.querySelector(
+            ".quiz-card"
+        );
+
+    const quizHeader =
+        document.querySelector(
+            ".quiz-header"
+        );
 
 
-    document.querySelector(
-        ".quiz-header"
-    ).classList.add(
-        "hidden"
-    );
+    if (quizCard) {
+
+        quizCard.classList.add(
+            "hidden"
+        );
+
+    }
+
+
+    if (quizHeader) {
+
+        quizHeader.classList.add(
+            "hidden"
+        );
+
+    }
 
 
     resultScreen.classList.remove(
