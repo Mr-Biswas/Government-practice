@@ -86,6 +86,21 @@ const logoutButton =
 const homeMessage =
     document.getElementById("home-message");
 
+const learningModulesButton =
+    document.getElementById("learning-modules-btn");
+
+const learningModulesScreen =
+    document.getElementById("learning-modules-screen");
+
+const learningModulesList =
+    document.getElementById("learning-modules-list");
+
+const learningHomeButton =
+    document.getElementById("learning-home-btn");
+
+const learningMessage =
+    document.getElementById("learning-message");
+
 
 // ============================================
 // DOM - QUIZ
@@ -176,6 +191,16 @@ logoutButton.addEventListener(
 
 
 resultHomeButton.addEventListener(
+    "click",
+    showHome
+);
+
+learningModulesButton.addEventListener(
+    "click",
+    showLearningModules
+);
+
+learningHomeButton.addEventListener(
     "click",
     showHome
 );
@@ -424,6 +449,10 @@ function showHome() {
         "hidden"
     );
 
+    learningModulesScreen.classList.add(
+        "hidden"
+    );
+
 
     resultScreen.classList.add(
         "hidden"
@@ -468,6 +497,74 @@ function showHome() {
 
     showHomeMessage("");
 
+}
+
+
+// ============================================
+// LEARNING MODULES
+// ============================================
+
+async function showLearningModules() {
+    if (!sessionToken) {
+        alert("Your session has expired. Please log in again.");
+        showLogin();
+        return;
+    }
+
+    loginScreen.classList.add("hidden");
+    homeScreen.classList.add("hidden");
+    quizScreen.classList.add("hidden");
+    resultScreen.classList.add("hidden");
+    learningModulesScreen.classList.remove("hidden");
+    learningModulesList.innerHTML = "<p class=\"message\">Loading modules...</p>";
+
+    try {
+        const formData = new URLSearchParams();
+        formData.append("action", "getLearningModules");
+        formData.append("token", sessionToken);
+
+        const response = await fetch(API_URL, { method: "POST", body: formData });
+        const data = await response.json();
+
+        if (!data.success) {
+            learningModulesList.innerHTML = "";
+            learningMessage.textContent = data.message || "Unable to load modules.";
+            return;
+        }
+
+        learningMessage.textContent = "";
+        learningModulesList.innerHTML = "";
+
+        if (!Array.isArray(data.modules) || data.modules.length === 0) {
+            learningModulesList.innerHTML = "<p class=\"message\">No learning modules available.</p>";
+            return;
+        }
+
+        data.modules.forEach(function(module) {
+            const card = document.createElement("div");
+            card.className = "learning-module-card";
+
+            const topic = document.createElement("div");
+            topic.className = "learning-topic";
+            topic.textContent = module.topicName;
+
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "open-link-btn";
+            button.textContent = "OPEN LINK";
+            button.addEventListener("click", function() {
+                window.open(module.url, "_blank", "noopener,noreferrer");
+            });
+
+            card.appendChild(topic);
+            card.appendChild(button);
+            learningModulesList.appendChild(card);
+        });
+    } catch (error) {
+        console.error("LEARNING MODULE ERROR:", error);
+        learningModulesList.innerHTML = "";
+        learningMessage.textContent = "Unable to connect to the server. Please try again.";
+    }
 }
 
 
