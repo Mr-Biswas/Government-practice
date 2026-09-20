@@ -168,7 +168,7 @@ const resultHomeButton =
 // ============================================
 
 const startButtons =
-    document.querySelectorAll(".start-btn");
+    document.querySelectorAll(".section-card .start-btn");
 
 const optionButtons =
     document.querySelectorAll(".option-btn");
