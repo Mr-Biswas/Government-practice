@@ -1237,3 +1237,32 @@ body {
 .open-link-btn:hover {
     background: var(--accent-green-strong);
 }
+
+
+/* ============================================
+   QUIZ READABILITY FIX - DEEP BLUE + LIGHT GREEN
+   ============================================ */
+#quiz-screen {
+    background: linear-gradient(135deg, #071F3A 0%, #0B2F55 48%, #123B66 100%);
+    border-radius: 16px;
+}
+
+#quiz-screen .quiz-header h2 {
+    color: #B8F2C8 !important;
+}
+
+#quiz-screen #question-counter {
+    color: #EAF8EF !important;
+}
+
+#quiz-screen #question-timer {
+    color: #B8F2C8 !important;
+}
+
+#quiz-screen .quiz-card {
+    color: #173F67;
+}
+
+#quiz-screen .question-text {
+    color: #0B2F55 !important;
+}
