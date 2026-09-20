@@ -1158,3 +1158,82 @@ button:disabled {
     }
 
 }
+
+/* ============================================
+   LIGHT GREEN ACCENTS + LEARNING MODULES
+   ============================================ */
+:root {
+    --accent-green: #B8F2C8;
+    --accent-green-strong: #74D99A;
+    --accent-green-text: #0B4F32;
+}
+
+body {
+    background: linear-gradient(135deg, #071F3A 0%, #0B2F55 42%, #EAF8EF 42%, #F4FBF6 100%);
+    background-attachment: fixed;
+}
+
+#login-screen, .home-header, .section-card, .learning-entry-card, .quiz-card, .result-card {
+    border-color: var(--accent-green-strong);
+}
+
+.primary-btn, .start-btn {
+    background: var(--deep-blue);
+    border: 1px solid var(--accent-green-strong);
+}
+
+.primary-btn:hover, .start-btn:hover {
+    background: #061D35;
+}
+
+.section-icon {
+    background: var(--accent-green);
+    color: var(--accent-green-text);
+}
+
+.learning-entry-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 12px;
+    padding: 16px;
+    border: 1px solid var(--accent-green-strong);
+    border-radius: 14px;
+    background: var(--card-background);
+    box-shadow: 0 3px 12px rgba(11, 47, 85, 0.08);
+}
+
+#learning-modules-screen {
+    padding-bottom: 30px;
+}
+
+.learning-module-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 15px;
+    margin-bottom: 12px;
+    border: 1px solid var(--accent-green-strong);
+    border-radius: 12px;
+    background: var(--card-background);
+}
+
+.learning-topic {
+    color: var(--deep-blue);
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.open-link-btn {
+    flex-shrink: 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: var(--accent-green);
+    color: var(--accent-green-text);
+    border: 1px solid var(--accent-green-strong);
+}
+
+.open-link-btn:hover {
+    background: var(--accent-green-strong);
+}
